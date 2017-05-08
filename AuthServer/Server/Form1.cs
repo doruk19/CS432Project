@@ -277,15 +277,22 @@ generateHexStringFromByteArray(signature) + " has been sent to " + userName + ".
                                     rtbEventLog.Invoke(new MethodInvoker(delegate { rtbEventLog.AppendText("Session key " + session_key + " has been generated for " + userName + ".\n"); }));
                                     rtbEventLog.Invoke(new MethodInvoker(delegate { rtbEventLog.AppendText("Session IV " + session_IV + " has been generated for " + userName + ".\n"); }));
                                 }
+                                byte[] header = Encoding.Default.GetBytes(userName + "~");
+                                byte[] plaintext_byte = new byte[header.Length+64];
+                                Array.Copy(header, plaintext_byte, header.Length);
+                                Array.Copy(session_key_byte, 0, plaintext_byte, header.Length, 16);
 
-                                string plaintext = userName + "~" + session_key + "~" + session_IV + "~" + hmac_key + "~";
-                                byte[] plaintext_byte = Encoding.Default.GetBytes(plaintext);
+                                Array.Copy(session_IV_byte, 0, plaintext_byte, header.Length+16, 16);
+
+                                Array.Copy(hmac_key_byte, 0, plaintext_byte, header.Length+32, 32);
                                 string plaintext_signature = generateHexStringFromByteArray(signWithRSA(plaintext_byte, 1024, server_pubpriv));
+                                Console.WriteLine(plaintext_signature);
                                 string plaintext_fs = generateHexStringFromByteArray(encryptWithRSA(plaintext_byte, 1024, fs_pub));
-
+                                
                                 string user_pub = System.IO.File.ReadAllText(userName + "_pub.txt");
 
                                 string plaintext_user = generateHexStringFromByteArray(encryptWithRSA(plaintext_byte, 1024, user_pub));
+                                //Console.WriteLine(generateHexStringFromByteArray(plaintext_byte));
                                 string ticket = plaintext_signature + "~" + plaintext_user + "~" + plaintext_fs + "~";
 
                                 byte[] send = Encoding.Default.GetBytes("ticket~"+ticket);

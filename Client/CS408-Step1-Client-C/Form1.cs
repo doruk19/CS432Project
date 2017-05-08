@@ -34,6 +34,7 @@ namespace CS408_Step1_Client_C
         string enc_pub_priv = null;
         string pub_key;
         string priv_key;
+        string serv_pub;
         static Socket client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         public frmConnect()
         {
@@ -59,7 +60,7 @@ namespace CS408_Step1_Client_C
             client.Send(buffer);
             if (rtbEvent.InvokeRequired)
             {
-                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += command + " Requested" + Environment.NewLine; }));
+                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( command + " Requested" + Environment.NewLine); }));
             }
         }
         private void btnConnect_Click(object sender, EventArgs e) //connects to the server and arranges GUI according to the current state
@@ -78,7 +79,7 @@ namespace CS408_Step1_Client_C
                 while ((line = file.ReadLine()) != null)
                     enc_pub_priv = line;
                 pub_key = System.IO.File.ReadAllText(username + "_pub.txt");
-                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Public key is: " + Environment.NewLine + pub_key + Environment.NewLine + Environment.NewLine; }));
+                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( "Public key is: " + Environment.NewLine + pub_key + Environment.NewLine + Environment.NewLine); }));
 
 
                 byte[] byte_enc = hexStringToByteArray(enc_pub_priv);
@@ -87,20 +88,20 @@ namespace CS408_Step1_Client_C
                 Array.Copy(sha256, 0, byte_key, 0, 16);
                 byte[] byte_IV = new byte[16];
                 Array.Copy(sha256, 16, byte_IV, 0, 16);
-                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Key for AES128 decryption: " + Environment.NewLine + generateHexStringFromByteArray(byte_key) + Environment.NewLine + Environment.NewLine; }));
+                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( "Key for AES128 decryption: " + Environment.NewLine + generateHexStringFromByteArray(byte_key) + Environment.NewLine + Environment.NewLine); }));
 
-                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "IV for AES128 decryption: " + Environment.NewLine + generateHexStringFromByteArray(byte_IV) + Environment.NewLine + Environment.NewLine; }));
+                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( "IV for AES128 decryption: " + Environment.NewLine + generateHexStringFromByteArray(byte_IV) + Environment.NewLine + Environment.NewLine); }));
 
                 byte[] decryptedAES128 = decryptWithAES128(byte_enc, byte_key, byte_IV);
 
                 if (decryptedAES128 == null)
-                    rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Wrong username or password" + Environment.NewLine; }));
+                    rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( "Wrong username or password" + Environment.NewLine); }));
                 else
                 {
                     priv_key = Encoding.Default.GetString(decryptedAES128);
                     
-                    rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Client-side authentication successful" + Environment.NewLine; }));
-                    rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Decrypted key is: " + Environment.NewLine + priv_key + Environment.NewLine + Environment.NewLine; }));
+                    rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( "Client-side authentication successful" + Environment.NewLine); }));
+                    rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( "Decrypted key is: " + Environment.NewLine + priv_key + Environment.NewLine + Environment.NewLine); }));
 
                     client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     try
@@ -125,7 +126,7 @@ namespace CS408_Step1_Client_C
             }
             catch
             {
-                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "No user found with that username" + Environment.NewLine; }));
+                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( "No user found with that username" + Environment.NewLine); }));
             }
 
         }
@@ -237,7 +238,7 @@ namespace CS408_Step1_Client_C
             bool connected = true;
             //to access Rich Text Box element in the GUI
 
-            rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Connected to the server." + Environment.NewLine; }));
+            rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( "Connected to the server." + Environment.NewLine); }));
 
             while (connected)
             {
@@ -263,7 +264,7 @@ namespace CS408_Step1_Client_C
                     else if (command == "list")
                     {
 
-                        rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "User list requested" + Environment.NewLine; }));
+                        rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( "User list requested" + Environment.NewLine); }));
                         // resets the listbox and adds the users into the list
                         lstUserList.Invoke(new MethodInvoker(delegate { lstUserList.Items.Clear(); }));
                         while (newmessage != "")
@@ -274,44 +275,45 @@ namespace CS408_Step1_Client_C
                         }
                         //to access Rich Text Box element in the GUI
 
-                        rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "User list received" + Environment.NewLine; }));
+                        rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( "User list received" + Environment.NewLine); }));
 
                     }
                     else if (command == "init")
                     {
                         hexRandom = newmessage.Substring(0, newmessage.Length - 1);
-                        rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Server generated random number is:" + Environment.NewLine + hexRandom + Environment.NewLine + Environment.NewLine; }));
+                        rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( "Server generated random number is:" + Environment.NewLine + hexRandom + Environment.NewLine + Environment.NewLine); }));
                         byte[] signatureRSA = signWithRSA(hexRandom, 2048, priv_key);
                         signedHexRandom = generateHexStringFromByteArray(signatureRSA);
-                        rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Signature is:"+ Environment.NewLine+ signedHexRandom+ Environment.NewLine + Environment.NewLine; }));
+                        rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( "Signature is:"+ Environment.NewLine+ signedHexRandom+ Environment.NewLine + Environment.NewLine); }));
                         RequestServer("Authenticate Signature");
 
 
                     }
                     else if (command == "invalid")
                     {
-                        rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Duplicate username. Choose a different username." + Environment.NewLine; }));
+                        rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( "Duplicate username. Choose a different username." + Environment.NewLine); }));
                         disconnect(client);
                     }
                     else if (command == "fb")
                     {
-                        rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Feedback received" + Environment.NewLine; }));
+                        rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( "Feedback received" + Environment.NewLine); }));
                         string fbAns = newmessage.Substring(0, newmessage.IndexOf("~"));
+                        byte[] byte_fbAns= Encoding.Default.GetBytes(fbAns);
                         newmessage = newmessage.Substring(newmessage.IndexOf("~") + 1);
                         string hex = newmessage.Substring(0, newmessage.IndexOf("~"));
-                        string serv_pub = System.IO.File.ReadAllText("auth_server_pub.txt");
-                        bool verificationResult = verifyWithRSA(fbAns, 2048, serv_pub, hexStringToByteArray(hex));
+                        serv_pub = System.IO.File.ReadAllText("auth_server_pub.txt");
+                        bool verificationResult = verifyWithRSA(byte_fbAns, 2048, serv_pub, hexStringToByteArray(hex));
                         if (verificationResult == true)
                         {
-                            rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Valid Signature" + Environment.NewLine; }));
+                            rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Valid Signature" + Environment.NewLine); }));
                             if (fbAns == "yes")
-                                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Successfully authenticated"; }));
+                                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Successfully authenticated \n"); }));
                             else if (fbAns == "no")
-                                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Not authenticated, try again"; }));
+                                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Not authenticated, try again \n"); }));
                         }
                         else
                         {
-                            rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Invalid Signature" + Environment.NewLine; }));
+                            rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Invalid Signature" + Environment.NewLine); }));
                         }
                     }
                     else if (command == "ticket")
@@ -321,33 +323,32 @@ namespace CS408_Step1_Client_C
                         newmessage = newmessage.Substring(newmessage.IndexOf("~") + 1);
                         plainUser = newmessage.Substring(0, newmessage.IndexOf("~"));
                         newmessage = newmessage.Substring(newmessage.IndexOf("~") + 1);
-                        plainFS = newmessage.Substring(newmessage.IndexOf("~"));
-                        byte[] bytePlainUser = new byte[1024];
-                        byte[] bytePlainSignature = new byte[1024];
-                        bytePlainUser = hexStringToByteArray(plainUser);
-                        bytePlainSignature = hexStringToByteArray(plainSignature);
-                        String decryptedUserPlaintext = generateHexStringFromByteArray(decryptWithRSA(bytePlainUser, 1024, priv_key));
-                        if(verifyWithRSA(decryptedUserPlaintext, 1024, pub_key, bytePlainSignature))                                                //YANLIS PUB_KEY OLABILIR!!
+                        plainFS = newmessage.Substring(0,newmessage.IndexOf("~"));
+                        byte[] bytePlainUser = hexStringToByteArray(plainUser);
+                        byte[] bytePlainSignature = hexStringToByteArray(plainSignature);
+                        Console.WriteLine(plainSignature);
+                        byte[] decryptedUserPlaintext = decryptWithRSA(bytePlainUser, 1024, priv_key);
+               
+                        if(verifyWithRSA(decryptedUserPlaintext, 1024, serv_pub, bytePlainSignature))                                                //YANLIS PUB_KEY OLABILIR!!
                         {
-                            String tmp = decryptedUserPlaintext;
-                            tmp = tmp.Substring(tmp.IndexOf("~")+1);
-                            String session_key = tmp.Substring(0, tmp.IndexOf("~"));
-                            tmp = tmp.Substring(tmp.IndexOf("~") + 1);
-                            String session_IV = tmp.Substring(0, tmp.IndexOf("~"));
-                            tmp = tmp.Substring(tmp.IndexOf("~") + 1);
-                            String hmac_key= tmp.Substring(0, tmp.IndexOf("~"));
-                            rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Session Key: \n"+ session_key+"\n Session IV: \n"+session_IV+"\n HMAC Key: \n"+hmac_key+"\n"; }));
+                            byte[] byte_session_key=new byte[16];
+                            Array.Copy(decryptedUserPlaintext,byte_session_key,16);
+                            byte[] byte_session_IV = new byte[16];
+                            Array.Copy(decryptedUserPlaintext,16,byte_session_IV,0,16);
+                            byte[] byte_hmac_key = new byte[32];
+                            Array.Copy(decryptedUserPlaintext, 32, byte_hmac_key, 0, 32);
+                            rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Session Key: \n" + generateHexStringFromByteArray(byte_session_key)+"\n Session IV: \n"+ generateHexStringFromByteArray(byte_session_IV) +"\n HMAC Key: \n"+ generateHexStringFromByteArray(byte_hmac_key) +"\n"); }));
                         }
                         else
                         {
-                            rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Verification of ticket from the Authentication Server failed! \n"; }));
+                            rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( "Verification of ticket from the Authentication Server failed! \n"); }));
                         }                       
                     }
                 }
                 catch
                 {
                     if (!terminating)
-                        rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Connection has been terminated by the server...\n"; }));
+                        rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Connection has been terminated by the server...\n"); }));
                     connected = false;
                 }
             }
@@ -356,10 +357,10 @@ namespace CS408_Step1_Client_C
         private void btnDisconnect_Click(object sender, EventArgs e)        //Disconnects the user and shows the related info
         {
 
-            rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Disconnect requested. " + Environment.NewLine + Environment.NewLine + Environment.NewLine; }));
+            rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText( "Disconnect requested. " + Environment.NewLine + Environment.NewLine + Environment.NewLine); }));
             RequestServer("Disconnect");
             disconnect(client);
-            rtbEvent.Text += "Disconnect granted." + Environment.NewLine;
+            rtbEvent.AppendText( "Disconnect granted." + Environment.NewLine);
         }
 
         private void btnUserList_Click(object sender, EventArgs e)  //requests the user list from the server
@@ -374,10 +375,10 @@ namespace CS408_Step1_Client_C
         }
 
         // verifying with RSA
-        static bool verifyWithRSA(string input, int algoLength, string xmlString, byte[] signature)
+        static bool verifyWithRSA(byte[] input, int algoLength, string xmlString, byte[] signature)
         {
             // convert input string to byte array
-            byte[] byteInput = Encoding.Default.GetBytes(input);
+           
             // create RSA object from System.Security.Cryptography
             RSACryptoServiceProvider rsaObject = new RSACryptoServiceProvider(algoLength);
             // set RSA object with xml string
@@ -386,7 +387,7 @@ namespace CS408_Step1_Client_C
 
             try
             {
-                result = rsaObject.VerifyData(byteInput, "SHA256", signature);
+                result = rsaObject.VerifyData(input, "SHA256", signature);
             }
             catch (Exception e)
             {
