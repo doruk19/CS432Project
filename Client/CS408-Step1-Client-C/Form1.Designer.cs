@@ -192,6 +192,7 @@
             this.rtbEvent.Size = new System.Drawing.Size(323, 355);
             this.rtbEvent.TabIndex = 0;
             this.rtbEvent.Text = "";
+            this.rtbEvent.TextChanged += new System.EventHandler(this.rtbEvent_TextChanged_1);
             // 
             // grpUserList
             // 
