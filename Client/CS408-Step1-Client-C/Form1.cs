@@ -53,6 +53,8 @@ namespace CS408_Step1_Client_C
                 com = "~init~";
             else if (command == "Authenticate Signature")
                 com = "~authenticate~" + hexRandom + "~" + signedHexRandom + "~";
+            else if (command == "Ticket Request")
+                com = "~req~";
             byte[] buffer = Encoding.Default.GetBytes(username + com);
             client.Send(buffer);
             if (rtbEvent.InvokeRequired)
@@ -190,7 +192,45 @@ namespace CS408_Step1_Client_C
 
             return result;
         }
+        static byte[] encryptWithRSA(byte[] input, int algoLength, string xmlString)
+        {
+            // create RSA object from System.Security.Cryptography
+            RSACryptoServiceProvider rsaObject = new RSACryptoServiceProvider(algoLength);
+            // set RSA object with xml string
+            rsaObject.FromXmlString(xmlString);
+            byte[] result = null;
 
+            try
+            {
+                result = rsaObject.Encrypt(input, true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return result;
+        }
+
+        // RSA decryption with varying bit length
+        static byte[] decryptWithRSA(byte[] input, int algoLength, string xmlString)
+        {
+            RSACryptoServiceProvider rsaObject = new RSACryptoServiceProvider(algoLength);
+            // set RSA object with xml string
+            rsaObject.FromXmlString(xmlString);
+            byte[] result = null;
+
+            try
+            {
+                result = rsaObject.Decrypt(input, true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return result;
+        }
 
         private void Receive()          //to recieve messages from the server and update GUI elements according to the messages
         {
@@ -273,6 +313,35 @@ namespace CS408_Step1_Client_C
                         {
                             rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Invalid Signature" + Environment.NewLine; }));
                         }
+                    }
+                    else if (command == "ticket")
+                    {
+                        string plainSignature, plainUser, plainFS;
+                        plainSignature = newmessage.Substring(0, newmessage.IndexOf("~"));
+                        newmessage = newmessage.Substring(newmessage.IndexOf("~") + 1);
+                        plainUser = newmessage.Substring(0, newmessage.IndexOf("~"));
+                        newmessage = newmessage.Substring(newmessage.IndexOf("~") + 1);
+                        plainFS = newmessage.Substring(newmessage.IndexOf("~"));
+                        byte[] bytePlainUser = new byte[1024];
+                        byte[] bytePlainSignature = new byte[1024];
+                        bytePlainUser = hexStringToByteArray(plainUser);
+                        bytePlainSignature = hexStringToByteArray(plainSignature);
+                        String decryptedUserPlaintext = generateHexStringFromByteArray(decryptWithRSA(bytePlainUser, 1024, priv_key));
+                        if(verifyWithRSA(decryptedUserPlaintext, 1024, pub_key, bytePlainSignature))                                                //YANLIS PUB_KEY OLABILIR!!
+                        {
+                            String tmp = decryptedUserPlaintext;
+                            tmp = tmp.Substring(tmp.IndexOf("~")+1);
+                            String session_key = tmp.Substring(0, tmp.IndexOf("~"));
+                            tmp = tmp.Substring(tmp.IndexOf("~") + 1);
+                            String session_IV = tmp.Substring(0, tmp.IndexOf("~"));
+                            tmp = tmp.Substring(tmp.IndexOf("~") + 1);
+                            String hmac_key= tmp.Substring(0, tmp.IndexOf("~"));
+                            rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Session Key: \n"+ session_key+"\n Session IV: \n"+session_IV+"\n HMAC Key: \n"+hmac_key+"\n"; }));
+                        }
+                        else
+                        {
+                            rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.Text += "Verification of ticket from the Authentication Server failed! \n"; }));
+                        }                       
                     }
                 }
                 catch
@@ -376,5 +445,9 @@ namespace CS408_Step1_Client_C
             return result;
         }
 
+        private void btnRequest_Click(object sender, EventArgs e)
+        {
+            RequestServer("Ticket Request");
+        }
     }
 }

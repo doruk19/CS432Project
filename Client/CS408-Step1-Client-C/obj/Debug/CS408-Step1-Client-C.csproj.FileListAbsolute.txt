@@ -11,3 +11,16 @@ D:\Users\idokurel\Desktop\Client\CS408-Step1-Client-C\bin\Debug\CS408-Step1-Clie
 D:\Users\idokurel\Desktop\Client\CS408-Step1-Client-C\obj\Debug\CS408-Step1-Client-C.exe.manifest
 D:\Users\idokurel\Desktop\Client\CS408-Step1-Client-C\obj\Debug\CS408-Step1-Client-C.application
 D:\Users\idokurel\Desktop\Client\CS408-Step1-Client-C\obj\Debug\CS408-Step1-Client-C.csprojResolveAssemblyReference.cache
+D:\Users\idokurel\Source\Repos\CS432Project\Client\CS408-Step1-Client-C\bin\Debug\CS408-Step1-Client-C.exe.config
+D:\Users\idokurel\Source\Repos\CS432Project\Client\CS408-Step1-Client-C\bin\Debug\CS408-Step1-Client-C.exe.manifest
+D:\Users\idokurel\Source\Repos\CS432Project\Client\CS408-Step1-Client-C\bin\Debug\CS408-Step1-Client-C.application
+D:\Users\idokurel\Source\Repos\CS432Project\Client\CS408-Step1-Client-C\bin\Debug\CS408-Step1-Client-C.exe
+D:\Users\idokurel\Source\Repos\CS432Project\Client\CS408-Step1-Client-C\bin\Debug\CS408-Step1-Client-C.pdb
+D:\Users\idokurel\Source\Repos\CS432Project\Client\CS408-Step1-Client-C\obj\Debug\CS408-Step1-Client-C.csprojResolveAssemblyReference.cache
+D:\Users\idokurel\Source\Repos\CS432Project\Client\CS408-Step1-Client-C\obj\Debug\CS408_Step1_Client_C.frmConnect.resources
+D:\Users\idokurel\Source\Repos\CS432Project\Client\CS408-Step1-Client-C\obj\Debug\CS408_Step1_Client_C.Properties.Resources.resources
+D:\Users\idokurel\Source\Repos\CS432Project\Client\CS408-Step1-Client-C\obj\Debug\CS408-Step1-Client-C.csproj.GenerateResource.Cache
+D:\Users\idokurel\Source\Repos\CS432Project\Client\CS408-Step1-Client-C\obj\Debug\CS408-Step1-Client-C.exe.manifest
+D:\Users\idokurel\Source\Repos\CS432Project\Client\CS408-Step1-Client-C\obj\Debug\CS408-Step1-Client-C.application
+D:\Users\idokurel\Source\Repos\CS432Project\Client\CS408-Step1-Client-C\obj\Debug\CS408-Step1-Client-C.exe
+D:\Users\idokurel\Source\Repos\CS432Project\Client\CS408-Step1-Client-C\obj\Debug\CS408-Step1-Client-C.pdb

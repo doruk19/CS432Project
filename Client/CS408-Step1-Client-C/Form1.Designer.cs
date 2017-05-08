@@ -45,6 +45,7 @@
             this.lstUserList = new System.Windows.Forms.ListBox();
             this.btnDisconnect = new System.Windows.Forms.Button();
             this.btnUserList = new System.Windows.Forms.Button();
+            this.btnRequest = new System.Windows.Forms.Button();
             this.grpConnect.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPort)).BeginInit();
             this.grpEvent.SuspendLayout();
@@ -108,7 +109,7 @@
             this.txtIP.Name = "txtIP";
             this.txtIP.Size = new System.Drawing.Size(150, 20);
             this.txtIP.TabIndex = 4;
-            this.txtIP.Text = "159.20.87.161";
+            this.txtIP.Text = "159.20.87.167";
             this.txtIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // numPort
@@ -239,11 +240,22 @@
             this.btnUserList.Visible = false;
             this.btnUserList.Click += new System.EventHandler(this.btnUserList_Click);
             // 
+            // btnRequest
+            // 
+            this.btnRequest.Location = new System.Drawing.Point(280, 52);
+            this.btnRequest.Name = "btnRequest";
+            this.btnRequest.Size = new System.Drawing.Size(75, 23);
+            this.btnRequest.TabIndex = 5;
+            this.btnRequest.Text = "Request";
+            this.btnRequest.UseVisualStyleBackColor = true;
+            this.btnRequest.Click += new System.EventHandler(this.btnRequest_Click);
+            // 
             // frmConnect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(357, 607);
+            this.Controls.Add(this.btnRequest);
             this.Controls.Add(this.grpUserList);
             this.Controls.Add(this.btnUserList);
             this.Controls.Add(this.btnDisconnect);
@@ -282,6 +294,7 @@
         private System.Windows.Forms.Button btnUserList;
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.TextBox txtPassword;
+        private System.Windows.Forms.Button btnRequest;
     }
 }
 
