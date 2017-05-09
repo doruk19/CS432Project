@@ -521,6 +521,20 @@ namespace CS408_Step1_Client_C
                                     rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("File not found... \n"); }));
                                 }
                             }
+                            else if(com== "uok")
+                            {
+                                if (rtbEvent.InvokeRequired)
+                                {
+                                    rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Successfully uploaded the file "+filename+" \n"); }));
+                                }
+                            }
+                            else if(com=="uf")
+                            {
+                                if (rtbEvent.InvokeRequired)
+                                {
+                                    rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("File Upload Failed... \n"); }));
+                                }
+                            }
                             else if (com.Substring(0, 2) == "ok")
                             {
                                 packetNum = Convert.ToInt32(com.Substring(2));
@@ -671,7 +685,7 @@ namespace CS408_Step1_Client_C
 
         private void btnDownload_Click(object sender, EventArgs e)
         {
-            filename = "die_wacht_am_rhein.ogg";
+            filename = "gg.mp3";
             RequestServer("Download");
         }
 
