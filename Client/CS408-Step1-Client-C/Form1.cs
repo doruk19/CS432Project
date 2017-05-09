@@ -197,6 +197,7 @@ namespace CS408_Step1_Client_C
             grpUserList.Invoke(new MethodInvoker(delegate { grpUserList.Visible = false; }));
             btnUserList.Invoke(new MethodInvoker(delegate { btnUserList.Visible = false; }));
             btnConnect.Invoke(new MethodInvoker(delegate { btnConnect.Visible = true; }));
+            client.Close();
             priv_key = null;
 
 
