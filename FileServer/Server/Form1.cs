@@ -221,7 +221,7 @@ namespace Server
                 try
                 {
                     //Receives data
-                    Byte[] buffer = new byte[1024];
+                    Byte[] buffer = new byte[8192];
                     int received = n.Receive(buffer);
 
                     //If there is none, throws exception
@@ -266,9 +266,16 @@ namespace Server
 
                                     byte[] hmac = applyHMACwithSHA256(ref file, hmac_key);
                                     byte[] encrypted = encryptWithAES128(file, session_key, session_IV);
-
-                                    int length = (hmac.Length + encrypted.Length) / 256 + 1;
-                                    string response = "fs~ok~"+length+"~";
+                                    int length = 0;
+                                    if ((hmac.Length + encrypted.Length) % (8*256) == 0)
+                                    {
+                                        length = (hmac.Length + encrypted.Length) / (8*256);
+                                    }
+                                    else
+                                    {
+                                        length = (hmac.Length + encrypted.Length) / (8 * 256) + 1;
+                                    }
+                                    string response = "fs~ok"+length+"~";
                                     byte[] response_byte = Encoding.Default.GetBytes("ok"+length);
                                     response = response + generateHexStringFromByteArray(signWithRSA(response_byte, 1024, fs_pub_priv)) + "~";
                                     rtbEventLog.Invoke(new MethodInvoker(delegate { rtbEventLog.AppendText("User " + userName + " requested a valid file, download starting. \n"); }));
@@ -280,9 +287,13 @@ namespace Server
                                     string file_str = sb.ToString();
                                     for(int i = 0; i < length; i++)
                                     {
-                                        string packet = file_str.Substring(0 + 512 * i, 512);
+                                        string packet = file_str.Substring(8*512 * i, Math.Min(8*512,file_str.Length- 8*512 * i));
                                         string message = "file~" + packet + "~";
+
                                         n.Send(Encoding.Default.GetBytes(message));
+                                        
+                                        System.Threading.Thread.Sleep(30);
+                                     
                                     }
 
                                 }
@@ -315,8 +326,8 @@ namespace Server
                                     byte[] session_IV = u.getIV();
 
                                     string file_str = u.getFile().ToString();
-                                    string given_hmac = file_str.Substring(file_str.Length - 512, 512);
-                                    file_str = file_str.Substring(0,file_str.Length - 512);
+                                    string given_hmac = file_str.Substring(file_str.Length - 64, 64);
+                                    file_str = file_str.Substring(0,file_str.Length - 64);
                                     byte[] decrypted = decryptWithAES128(StringToByteArray(file_str), session_key, session_IV);
                                     byte[] hmac = applyHMACwithSHA256(ref decrypted, hmac_key);
                                     string response="";

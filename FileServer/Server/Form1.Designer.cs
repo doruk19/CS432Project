@@ -71,7 +71,7 @@
             this.numPort.Size = new System.Drawing.Size(101, 20);
             this.numPort.TabIndex = 2;
             this.numPort.Value = new decimal(new int[] {
-            8888,
+            8889,
             0,
             0,
             0});
@@ -152,7 +152,7 @@
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.rtbEventLog);
             this.Name = "ServerForm";
-            this.Text = "Server";
+            this.Text = "File Server";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ServerForm_FormClosing);
             this.Load += new System.EventHandler(this.ServerForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numPort)).EndInit();

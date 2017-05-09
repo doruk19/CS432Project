@@ -30,11 +30,15 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmConnect));
             this.grpConnect = new System.Windows.Forms.GroupBox();
+            this.numFilePort = new System.Windows.Forms.NumericUpDown();
+            this.grpServSelect = new System.Windows.Forms.GroupBox();
+            this.rdFile = new System.Windows.Forms.RadioButton();
+            this.rdAuth = new System.Windows.Forms.RadioButton();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.lblPassword = new System.Windows.Forms.Label();
             this.txtUsername = new System.Windows.Forms.TextBox();
             this.txtIP = new System.Windows.Forms.TextBox();
-            this.numPort = new System.Windows.Forms.NumericUpDown();
+            this.numAuthPort = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -46,19 +50,24 @@
             this.btnDisconnect = new System.Windows.Forms.Button();
             this.btnUserList = new System.Windows.Forms.Button();
             this.btnRequest = new System.Windows.Forms.Button();
+            this.btnDownload = new System.Windows.Forms.Button();
             this.grpConnect.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numPort)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numFilePort)).BeginInit();
+            this.grpServSelect.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAuthPort)).BeginInit();
             this.grpEvent.SuspendLayout();
             this.grpUserList.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpConnect
             // 
+            this.grpConnect.Controls.Add(this.numFilePort);
+            this.grpConnect.Controls.Add(this.grpServSelect);
             this.grpConnect.Controls.Add(this.txtPassword);
             this.grpConnect.Controls.Add(this.lblPassword);
             this.grpConnect.Controls.Add(this.txtUsername);
             this.grpConnect.Controls.Add(this.txtIP);
-            this.grpConnect.Controls.Add(this.numPort);
+            this.grpConnect.Controls.Add(this.numAuthPort);
             this.grpConnect.Controls.Add(this.label3);
             this.grpConnect.Controls.Add(this.label2);
             this.grpConnect.Controls.Add(this.label1);
@@ -70,6 +79,59 @@
             this.grpConnect.TabIndex = 0;
             this.grpConnect.TabStop = false;
             this.grpConnect.Text = "Connection";
+            // 
+            // numFilePort
+            // 
+            this.numFilePort.Location = new System.Drawing.Point(141, 91);
+            this.numFilePort.Margin = new System.Windows.Forms.Padding(2);
+            this.numFilePort.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numFilePort.Name = "numFilePort";
+            this.numFilePort.Size = new System.Drawing.Size(77, 20);
+            this.numFilePort.TabIndex = 9;
+            this.numFilePort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numFilePort.Value = new decimal(new int[] {
+            8889,
+            0,
+            0,
+            0});
+            // 
+            // grpServSelect
+            // 
+            this.grpServSelect.Controls.Add(this.rdFile);
+            this.grpServSelect.Controls.Add(this.rdAuth);
+            this.grpServSelect.Location = new System.Drawing.Point(4, 111);
+            this.grpServSelect.Name = "grpServSelect";
+            this.grpServSelect.Size = new System.Drawing.Size(257, 31);
+            this.grpServSelect.TabIndex = 8;
+            this.grpServSelect.TabStop = false;
+            this.grpServSelect.Text = "Server Type";
+            // 
+            // rdFile
+            // 
+            this.rdFile.AutoSize = true;
+            this.rdFile.Location = new System.Drawing.Point(139, 14);
+            this.rdFile.Name = "rdFile";
+            this.rdFile.Size = new System.Drawing.Size(75, 17);
+            this.rdFile.TabIndex = 1;
+            this.rdFile.Text = "File Server";
+            this.rdFile.UseVisualStyleBackColor = true;
+            this.rdFile.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
+            // 
+            // rdAuth
+            // 
+            this.rdAuth.AutoSize = true;
+            this.rdAuth.Checked = true;
+            this.rdAuth.Location = new System.Drawing.Point(6, 14);
+            this.rdAuth.Name = "rdAuth";
+            this.rdAuth.Size = new System.Drawing.Size(127, 17);
+            this.rdAuth.TabIndex = 0;
+            this.rdAuth.TabStop = true;
+            this.rdAuth.Text = "Authentication Server";
+            this.rdAuth.UseVisualStyleBackColor = true;
             // 
             // txtPassword
             // 
@@ -112,20 +174,20 @@
             this.txtIP.Text = "159.20.87.167";
             this.txtIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // numPort
+            // numAuthPort
             // 
-            this.numPort.Location = new System.Drawing.Point(64, 91);
-            this.numPort.Margin = new System.Windows.Forms.Padding(2);
-            this.numPort.Maximum = new decimal(new int[] {
+            this.numAuthPort.Location = new System.Drawing.Point(64, 91);
+            this.numAuthPort.Margin = new System.Windows.Forms.Padding(2);
+            this.numAuthPort.Maximum = new decimal(new int[] {
             9999,
             0,
             0,
             0});
-            this.numPort.Name = "numPort";
-            this.numPort.Size = new System.Drawing.Size(149, 20);
-            this.numPort.TabIndex = 3;
-            this.numPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.numPort.Value = new decimal(new int[] {
+            this.numAuthPort.Name = "numAuthPort";
+            this.numAuthPort.Size = new System.Drawing.Size(73, 20);
+            this.numAuthPort.TabIndex = 3;
+            this.numAuthPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numAuthPort.Value = new decimal(new int[] {
             8888,
             0,
             0,
@@ -137,9 +199,10 @@
             this.label3.Location = new System.Drawing.Point(4, 93);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(26, 13);
+            this.label3.Size = new System.Drawing.Size(31, 13);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Port";
+            this.label3.Text = "Ports";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // label2
             // 
@@ -243,7 +306,7 @@
             // 
             // btnRequest
             // 
-            this.btnRequest.Location = new System.Drawing.Point(280, 52);
+            this.btnRequest.Location = new System.Drawing.Point(97, 209);
             this.btnRequest.Name = "btnRequest";
             this.btnRequest.Size = new System.Drawing.Size(75, 23);
             this.btnRequest.TabIndex = 5;
@@ -251,11 +314,22 @@
             this.btnRequest.UseVisualStyleBackColor = true;
             this.btnRequest.Click += new System.EventHandler(this.btnRequest_Click);
             // 
+            // btnDownload
+            // 
+            this.btnDownload.Location = new System.Drawing.Point(178, 209);
+            this.btnDownload.Name = "btnDownload";
+            this.btnDownload.Size = new System.Drawing.Size(75, 23);
+            this.btnDownload.TabIndex = 6;
+            this.btnDownload.Text = "Download";
+            this.btnDownload.UseVisualStyleBackColor = true;
+            this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
+            // 
             // frmConnect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(357, 607);
+            this.Controls.Add(this.btnDownload);
             this.Controls.Add(this.btnRequest);
             this.Controls.Add(this.grpUserList);
             this.Controls.Add(this.btnUserList);
@@ -270,7 +344,10 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmConnect_FormClosing);
             this.grpConnect.ResumeLayout(false);
             this.grpConnect.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numPort)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numFilePort)).EndInit();
+            this.grpServSelect.ResumeLayout(false);
+            this.grpServSelect.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAuthPort)).EndInit();
             this.grpEvent.ResumeLayout(false);
             this.grpUserList.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -282,7 +359,7 @@
         private System.Windows.Forms.GroupBox grpConnect;
         private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.TextBox txtIP;
-        private System.Windows.Forms.NumericUpDown numPort;
+        private System.Windows.Forms.NumericUpDown numAuthPort;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
@@ -296,6 +373,11 @@
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Button btnRequest;
+        private System.Windows.Forms.GroupBox grpServSelect;
+        private System.Windows.Forms.RadioButton rdFile;
+        private System.Windows.Forms.RadioButton rdAuth;
+        private System.Windows.Forms.NumericUpDown numFilePort;
+        private System.Windows.Forms.Button btnDownload;
     }
 }
 

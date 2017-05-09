@@ -153,7 +153,7 @@
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.rtbEventLog);
             this.Name = "ServerForm";
-            this.Text = "Server";
+            this.Text = "Authentication Server";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ServerForm_FormClosing);
             this.Load += new System.EventHandler(this.ServerForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numPort)).EndInit();

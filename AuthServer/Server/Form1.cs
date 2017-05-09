@@ -159,7 +159,7 @@ namespace Server
                 try
                 {
                     //Receives data
-                    Byte[] buffer = new byte[1024];
+                    Byte[] buffer = new byte[8192];
                     int received = n.Receive(buffer);
 
                     //If there is none, throws exception
