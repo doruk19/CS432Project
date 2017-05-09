@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -31,6 +32,10 @@ namespace Server
             byte[] hmac_key;
             byte[] session_key;
             byte[] session_iv;
+            int packetMax;
+            int packetCtr;
+            string fileName;
+            StringBuilder sb;
 
             //Constructor for the user
             public User(string uname, IPAddress uaddress, byte[] uhmac,byte[]ukey, byte[]uiv)
@@ -40,6 +45,11 @@ namespace Server
                 hmac_key = uhmac;
                 session_key = ukey;
                 session_iv = uiv;
+                packetMax = 0;
+                packetCtr = 0;
+                fileName = "";
+                sb = new StringBuilder(1024);
+
             }
             //Returns the name of the user
             public string getName()
@@ -62,6 +72,41 @@ namespace Server
             public byte[] getHMAC()
             {
                 return hmac_key;
+            }
+            public void appendFile(string filebit)
+            {
+                sb.Append(filebit);
+            }
+            public void incrementCount(string s)
+            {
+                packetCtr++;
+                if (packetCtr >= 1)
+                {
+                    fileName = s;
+                }
+            }
+            public void Clear()
+            {
+                packetCtr = 0;
+                fileName = "";
+                packetMax=0;
+                sb.Clear();
+            }
+            public StringBuilder getFile()
+            {
+                return sb;
+            }
+            public void setPacketLength(int length)
+            {
+                packetMax = 0;
+            }
+            public int getPacketLength()
+            {
+                return packetMax;
+            }
+            public int getCurrentPacket()
+            {
+                return packetCtr;
             }
             //Override method for equality of two users. Used for comparing whether the user with same 
             public bool Equals(User rhs)
@@ -197,11 +242,108 @@ namespace Server
                         if (!(findUser(((IPEndPoint)n.RemoteEndPoint).Address).Equals(new User())))
                         {
                             string command = receivedData.Substring(0, receivedData.IndexOf("~"));
+                            receivedData = receivedData.Substring(receivedData.IndexOf("~") + 1);
                             //If the command is list, it sends the list of currently connected users.
-                            if (command == "ticket")
+                            if (command == "download")
                             {
+                                string file_name = receivedData.Substring(0, receivedData.IndexOf("~"));
+                                receivedData = receivedData.Substring(receivedData.IndexOf("~") + 1);
+                                if (!File.Exists(file_name))
+                                {
+                                    string response = "fs~nf~";
+                                    byte[] response_byte = Encoding.Default.GetBytes("nf");
+                                    response = response + generateHexStringFromByteArray(signWithRSA(response_byte, 1024, fs_pub_priv)) + "~";
+                                    rtbEventLog.Invoke(new MethodInvoker(delegate { rtbEventLog.AppendText("User " + userName + " requested a non-existent file. \n"); }));
+                                    n.Send(Encoding.Default.GetBytes(response));
+                                }
+                                else
+                                {
+                                    byte[] file = File.ReadAllBytes(file_name);
+                                    User u = findUser(userName);
+                                    byte[] hmac_key = u.getHMAC();
+                                    byte[] session_key = u.getKey();
+                                    byte[] session_IV = u.getIV();
 
+                                    byte[] hmac = applyHMACwithSHA256(ref file, hmac_key);
+                                    byte[] encrypted = encryptWithAES128(file, session_key, session_IV);
+
+                                    int length = (hmac.Length + encrypted.Length) / 256 + 1;
+                                    string response = "fs~ok~"+length+"~";
+                                    byte[] response_byte = Encoding.Default.GetBytes("ok"+length);
+                                    response = response + generateHexStringFromByteArray(signWithRSA(response_byte, 1024, fs_pub_priv)) + "~";
+                                    rtbEventLog.Invoke(new MethodInvoker(delegate { rtbEventLog.AppendText("User " + userName + " requested a valid file, download starting. \n"); }));
+                                    n.Send(Encoding.Default.GetBytes(response));
+                                    
+                                    StringBuilder sb = new StringBuilder(1024);
+                                    sb.Append(generateHexStringFromByteArray(encrypted));
+                                    sb.Append(generateHexStringFromByteArray(hmac));
+                                    string file_str = sb.ToString();
+                                    for(int i = 0; i < length; i++)
+                                    {
+                                        string packet = file_str.Substring(0 + 512 * i, 512);
+                                        string message = "file~" + packet + "~";
+                                        n.Send(Encoding.Default.GetBytes(message));
+                                    }
+
+                                }
+                               }
+                            else if (command == "disconnect")
+                            {
+                                byte[] send = Encoding.Default.GetBytes("disconnect~");
+                                n.Send(send);
+                                n.Shutdown(SocketShutdown.Both);
+
+
+                                throw new SocketException();
                             }
+                            else if (command =="upload")
+                            {
+                                string file_name = receivedData.Substring(0, receivedData.IndexOf("~"));
+                                receivedData = receivedData.Substring(receivedData.IndexOf("~") + 1);
+                                string packetlength = receivedData.Substring(0, receivedData.IndexOf("~"));
+                                receivedData = receivedData.Substring(receivedData.IndexOf("~") + 1);
+                                string packet = receivedData.Substring(0, receivedData.IndexOf("~"));
+
+                                User u = findUser(userName);
+                                u.appendFile(packet);
+                                u.setPacketLength(Int32.Parse(packetlength));
+                                u.incrementCount(file_name);
+                                if (u.getCurrentPacket() == u.getPacketLength())
+                                {
+                                    byte[] hmac_key = u.getHMAC();
+                                    byte[] session_key = u.getKey();
+                                    byte[] session_IV = u.getIV();
+
+                                    string file_str = u.getFile().ToString();
+                                    string given_hmac = file_str.Substring(file_str.Length - 512, 512);
+                                    file_str = file_str.Substring(0,file_str.Length - 512);
+                                    byte[] decrypted = decryptWithAES128(StringToByteArray(file_str), session_key, session_IV);
+                                    byte[] hmac = applyHMACwithSHA256(ref decrypted, hmac_key);
+                                    string response="";
+                                    if (hmac == StringToByteArray(given_hmac))
+                                    {
+                                        response = "uok";
+                                        File.WriteAllBytes(file_name, decrypted);
+                                        rtbEventLog.Invoke(new MethodInvoker(delegate { rtbEventLog.AppendText("User " + userName + " successfully uploaded file " +file_name + ".\n"); }));
+                                        
+                                    }
+                                    else
+                                    {
+                                        response = "uf";
+                                        rtbEventLog.Invoke(new MethodInvoker(delegate { rtbEventLog.AppendText("User " + userName + " failed to upload " + file_name + ".\n"); }));
+
+                                    }
+                                    u.Clear();
+                                    string message = "fs~" + response + "~" + generateHexStringFromByteArray(signWithRSA(Encoding.Default.GetBytes(response), 1024, fs_pub_priv)) + "~";
+                                    n.Send(Encoding.Default.GetBytes(message));
+                                }
+                                int index = 0;
+                                foreach (User t in users)
+                                    if (u.getName() == t.getName())
+                                        index = users.IndexOf(t);
+                                users[index] = u;
+                            }
+
 
                         }
                         //If the ip doesn't match, this means somebody else is trying to use the same username so it doesn't allow it and disconnects the user.
@@ -413,6 +555,79 @@ namespace Server
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+            }
+
+            return result;
+        }
+
+        // HMAC with SHA-256
+        static byte[] applyHMACwithSHA256(ref byte[] input, byte[] key)
+        {
+            // create HMAC applier object from System.Security.Cryptography
+            HMACSHA256 hmacSHA256 = new HMACSHA256(key);
+            // get the result of HMAC operation
+            byte[] result = hmacSHA256.ComputeHash(input);
+
+            return result;
+        }
+        static byte[] encryptWithAES128(byte[] input, byte[] key, byte[] IV)
+        {
+            // create AES object from System.Security.Cryptography
+            RijndaelManaged aesObject = new RijndaelManaged();
+            // since we want to use AES-128
+            aesObject.KeySize = 128;
+            // block size of AES is 128 bits
+            aesObject.BlockSize = 128;
+            // mode -> CipherMode.*
+            aesObject.Mode = CipherMode.CBC;
+            // feedback size should be equal to block size
+            aesObject.FeedbackSize = 128;
+            // set the key
+            aesObject.Key = key;
+            // set the IV
+            aesObject.IV = IV;
+            // create an encryptor with the settings provided
+            ICryptoTransform encryptor = aesObject.CreateEncryptor();
+            byte[] result = null;
+
+            try
+            {
+                result = encryptor.TransformFinalBlock(input, 0, input.Length);
+            }
+            catch (Exception e) // if encryption fails
+            {
+                Console.WriteLine(e.Message); // display the cause
+            }
+
+            return result;
+        }
+        static byte[] decryptWithAES128(byte[] input, byte[] key, byte[] IV)
+        {
+            // create AES object from System.Security.Cryptography
+            RijndaelManaged aesObject = new RijndaelManaged();
+            // since we want to use AES-128
+            aesObject.KeySize = 128;
+            // block size of AES is 128 bits
+            aesObject.BlockSize = 128;
+            // mode -> CipherMode.*
+            aesObject.Mode = CipherMode.CBC;
+            // feedback size should be equal to block size
+            aesObject.FeedbackSize = 128;
+            // set the key
+            aesObject.Key = key;
+            // set the IV
+            aesObject.IV = IV;
+            // create an encryptor with the settings provided
+            ICryptoTransform decryptor = aesObject.CreateDecryptor();
+            byte[] result = null;
+
+            try
+            {
+                result = decryptor.TransformFinalBlock(input, 0, input.Length);
+            }
+            catch (Exception e) // if encryption fails
+            {
+                Console.WriteLine(e.Message); // display the cause
             }
 
             return result;
