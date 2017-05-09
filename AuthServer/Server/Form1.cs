@@ -503,5 +503,11 @@ generateHexStringFromByteArray(signature) + " has been sent to " + userName + ".
         {
 
         }
+
+        private void rtbEventLog_TextChanged(object sender, EventArgs e)
+        {
+            rtbEventLog.SelectionStart = rtbEventLog.Text.Length;
+            rtbEventLog.ScrollToCaret();
+        }
     }
 }

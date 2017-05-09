@@ -48,6 +48,7 @@
             this.rtbEventLog.Size = new System.Drawing.Size(366, 383);
             this.rtbEventLog.TabIndex = 0;
             this.rtbEventLog.Text = "";
+            this.rtbEventLog.TextChanged += new System.EventHandler(this.rtbEventLog_TextChanged);
             // 
             // btnStart
             // 

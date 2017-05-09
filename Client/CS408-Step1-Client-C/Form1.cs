@@ -450,5 +450,12 @@ namespace CS408_Step1_Client_C
         {
             RequestServer("Ticket Request");
         }
+
+        private void rtbEvent_TextChanged_1(object sender, EventArgs e)
+        {
+
+            rtbEvent.SelectionStart = rtbEvent.Text.Length;
+            rtbEvent.ScrollToCaret();
+        }
     }
 }
