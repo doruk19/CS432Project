@@ -51,6 +51,7 @@
             this.btnUserList = new System.Windows.Forms.Button();
             this.btnRequest = new System.Windows.Forms.Button();
             this.btnDownload = new System.Windows.Forms.Button();
+            this.btnUpload = new System.Windows.Forms.Button();
             this.grpConnect.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFilePort)).BeginInit();
             this.grpServSelect.SuspendLayout();
@@ -324,11 +325,22 @@
             this.btnDownload.UseVisualStyleBackColor = true;
             this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
             // 
+            // btnUpload
+            // 
+            this.btnUpload.Location = new System.Drawing.Point(259, 209);
+            this.btnUpload.Name = "btnUpload";
+            this.btnUpload.Size = new System.Drawing.Size(75, 23);
+            this.btnUpload.TabIndex = 7;
+            this.btnUpload.Text = "Upload";
+            this.btnUpload.UseVisualStyleBackColor = true;
+            this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
+            // 
             // frmConnect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(357, 607);
+            this.Controls.Add(this.btnUpload);
             this.Controls.Add(this.btnDownload);
             this.Controls.Add(this.btnRequest);
             this.Controls.Add(this.grpUserList);
@@ -378,6 +390,7 @@
         private System.Windows.Forms.RadioButton rdAuth;
         private System.Windows.Forms.NumericUpDown numFilePort;
         private System.Windows.Forms.Button btnDownload;
+        private System.Windows.Forms.Button btnUpload;
     }
 }
 

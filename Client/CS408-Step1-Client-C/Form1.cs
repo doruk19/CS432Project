@@ -670,8 +670,75 @@ namespace CS408_Step1_Client_C
 
         private void btnDownload_Click(object sender, EventArgs e)
         {
-            filename = "kaiserreich.7z";
+            filename = "die_wacht_am_rhein.ogg";
             RequestServer("Download");
+        }
+
+        private void btnUpload_Click(object sender, EventArgs e)
+        {
+            filename = "die_wacht_am_rhein.ogg";
+
+            byte[] file= File.ReadAllBytes(filename);
+            byte[] hmac = applyHMACwithSHA256(ref file, byte_hmac_key);
+            byte[] encrypted = encryptWithAES128(file, byte_session_key, byte_session_IV);
+            int length = 0;
+            if ((hmac.Length + encrypted.Length) % (8 * 256) == 0)
+            {
+                length = (hmac.Length + encrypted.Length) / (8 * 256);
+            }
+            else
+            {
+                length = (hmac.Length + encrypted.Length) / (8 * 256) + 1;
+            }
+            string response = username+"~upload~"+filename+"~" + length + "~";
+            StringBuilder sb = new StringBuilder(1024);
+            sb.Append(generateHexStringFromByteArray(encrypted));
+            sb.Append(generateHexStringFromByteArray(hmac));
+            string file_str = sb.ToString();
+            for (int i = 0; i < length; i++)
+            {
+                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText((i+1).ToString() + "   Download in Progress: " + (i+1) * 100 / length + "% Remaining packets: " + (length - i-1).ToString() + " \n"); }));
+                string packet = file_str.Substring(8 * 512 * i, Math.Min(8 * 512, file_str.Length - 8 * 512 * i));
+                string message = response + packet + "~";
+                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Packet " + length + " packages \n"); }));
+
+                client.Send(Encoding.Default.GetBytes(message));
+
+                System.Threading.Thread.Sleep(50);
+
+            }
+            
+        }
+        static byte[] encryptWithAES128(byte[] input, byte[] key, byte[] IV)
+        {
+            // create AES object from System.Security.Cryptography
+            RijndaelManaged aesObject = new RijndaelManaged();
+            // since we want to use AES-128
+            aesObject.KeySize = 128;
+            // block size of AES is 128 bits
+            aesObject.BlockSize = 128;
+            // mode -> CipherMode.*
+            aesObject.Mode = CipherMode.CBC;
+            // feedback size should be equal to block size
+            aesObject.FeedbackSize = 128;
+            // set the key
+            aesObject.Key = key;
+            // set the IV
+            aesObject.IV = IV;
+            // create an encryptor with the settings provided
+            ICryptoTransform encryptor = aesObject.CreateEncryptor();
+            byte[] result = null;
+
+            try
+            {
+                result = encryptor.TransformFinalBlock(input, 0, input.Length);
+            }
+            catch (Exception e) // if encryption fails
+            {
+                Console.WriteLine(e.Message); // display the cause
+            }
+
+            return result;
         }
     }
 }

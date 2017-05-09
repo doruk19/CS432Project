@@ -98,7 +98,7 @@ namespace Server
             }
             public void setPacketLength(int length)
             {
-                packetMax = 0;
+                packetMax = length;
             }
             public int getPacketLength()
             {
@@ -331,7 +331,7 @@ namespace Server
                                     byte[] decrypted = decryptWithAES128(StringToByteArray(file_str), session_key, session_IV);
                                     byte[] hmac = applyHMACwithSHA256(ref decrypted, hmac_key);
                                     string response="";
-                                    if (hmac == StringToByteArray(given_hmac))
+                                    if (hmac.SequenceEqual( StringToByteArray(given_hmac)))
                                     {
                                         response = "uok";
                                         File.WriteAllBytes(file_name, decrypted);
