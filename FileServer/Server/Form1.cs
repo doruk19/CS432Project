@@ -303,7 +303,11 @@ namespace Server
                                 byte[] send = Encoding.Default.GetBytes("disconnect~");
                                 n.Send(send);
                                 n.Shutdown(SocketShutdown.Both);
-
+                                foreach (User t in users)
+                                {
+                                    if (rtbAuthenticatedUsers.InvokeRequired)
+                                        rtbAuthenticatedUsers.Invoke(new MethodInvoker(delegate { rtbAuthenticatedUsers.AppendText(t.getName() + "\n"); }));
+                                }
 
                                 throw new SocketException();
                             }
@@ -402,6 +406,11 @@ namespace Server
                                 User u = new User(userName, ((IPEndPoint)n.RemoteEndPoint).Address,byte_hmac_key,byte_session_key,byte_session_IV);
                                 users.Add(u);
                                 response = "yes";
+                                foreach (User t in users)
+                                {
+                                    if (rtbAuthenticatedUsers.InvokeRequired)
+                                        rtbAuthenticatedUsers.Invoke(new MethodInvoker(delegate { rtbAuthenticatedUsers.AppendText(t.getName() + "\n"); }));
+                                }
                             }
                             else
                             {
