@@ -7,9 +7,6 @@ F:\CS408 Project\Server\Server\obj\Debug\Server.Properties.Resources.resources
 F:\CS408 Project\Server\Server\obj\Debug\Server.csproj.GenerateResource.Cache
 F:\CS408 Project\Server\Server\obj\Debug\Server.exe
 F:\CS408 Project\Server\Server\obj\Debug\Server.pdb
-C:\Users\dgur\Desktop\17699_Gur_KamilDoruk\CS432Project\AuthServer\Server\bin\Debug\Server.exe.config
-C:\Users\dgur\Desktop\17699_Gur_KamilDoruk\CS432Project\AuthServer\Server\obj\Debug\Server.exe
-C:\Users\dgur\Desktop\17699_Gur_KamilDoruk\CS432Project\AuthServer\Server\obj\Debug\Server.pdb
 D:\Users\idokurel\Source\Repos\CS432Project\AuthServer\Server\bin\Debug\Server.exe.config
 D:\Users\idokurel\Source\Repos\CS432Project\AuthServer\Server\bin\Debug\Server.exe
 D:\Users\idokurel\Source\Repos\CS432Project\AuthServer\Server\bin\Debug\Server.pdb
@@ -19,3 +16,12 @@ D:\Users\idokurel\Source\Repos\CS432Project\AuthServer\Server\obj\Debug\Server.P
 D:\Users\idokurel\Source\Repos\CS432Project\AuthServer\Server\obj\Debug\Server.csproj.GenerateResource.Cache
 D:\Users\idokurel\Source\Repos\CS432Project\AuthServer\Server\obj\Debug\Server.exe
 D:\Users\idokurel\Source\Repos\CS432Project\AuthServer\Server\obj\Debug\Server.pdb
+C:\Users\dgur\Desktop\17699_Gur_KamilDoruk\CS432Project\AuthServer\Server\bin\Debug\Server.exe.config
+C:\Users\dgur\Desktop\17699_Gur_KamilDoruk\CS432Project\AuthServer\Server\bin\Debug\Server.exe
+C:\Users\dgur\Desktop\17699_Gur_KamilDoruk\CS432Project\AuthServer\Server\bin\Debug\Server.pdb
+C:\Users\dgur\Desktop\17699_Gur_KamilDoruk\CS432Project\AuthServer\Server\obj\Debug\Server.csprojResolveAssemblyReference.cache
+C:\Users\dgur\Desktop\17699_Gur_KamilDoruk\CS432Project\AuthServer\Server\obj\Debug\Server.ServerForm.resources
+C:\Users\dgur\Desktop\17699_Gur_KamilDoruk\CS432Project\AuthServer\Server\obj\Debug\Server.Properties.Resources.resources
+C:\Users\dgur\Desktop\17699_Gur_KamilDoruk\CS432Project\AuthServer\Server\obj\Debug\Server.csproj.GenerateResource.Cache
+C:\Users\dgur\Desktop\17699_Gur_KamilDoruk\CS432Project\AuthServer\Server\obj\Debug\Server.exe
+C:\Users\dgur\Desktop\17699_Gur_KamilDoruk\CS432Project\AuthServer\Server\obj\Debug\Server.pdb

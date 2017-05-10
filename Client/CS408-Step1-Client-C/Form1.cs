@@ -36,6 +36,7 @@ namespace CS408_Step1_Client_C
         string pub_key;
         string priv_key;
         string serv_pub;
+        string file_serv_pub;
         string filename;
         string ticket;
         int packetNum;
@@ -199,7 +200,6 @@ namespace CS408_Step1_Client_C
             grpUserList.Invoke(new MethodInvoker(delegate { grpUserList.Visible = false; }));
             btnUserList.Invoke(new MethodInvoker(delegate { btnUserList.Visible = false; }));
             btnConnect.Invoke(new MethodInvoker(delegate { btnConnect.Visible = true; }));
-            packetCounter = 0;
             client.Close();
             priv_key = null;
 
@@ -460,7 +460,8 @@ namespace CS408_Step1_Client_C
                             {
                                 if (rtbEvent.InvokeRequired)
                                 {
-                                    rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText(packetCounter + "   Download in Progress: " + packetCounter * 100 / packetNum + "% Remaining packets: " + (packetNum - packetCounter).ToString() + " \n"); }));
+                                    if(packetCounter!=0)
+                                        rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText(packetCounter + "   Download in Progress: " + packetCounter * 100 / packetNum + "% Remaining packets: " + (packetNum - packetCounter).ToString() + " \n"); }));
                                 }
                             }
                             sb.Append(newmessage);
@@ -473,7 +474,7 @@ namespace CS408_Step1_Client_C
                                 string given_hmac = file_str.Substring(file_str.Length - 64, 64);
                                 file_str = file_str.Substring(0, file_str.Length - 64);
                                 byte[] decrypted = decryptWithAES128(hexStringToByteArray(file_str), byte_session_key, byte_session_IV, CipherMode.CBC);
-                                byte[] hmac = applyHMACwithSHA256(ref decrypted, byte_hmac_key);
+                                byte[] hmac = applyHMACwithSHA256(decrypted, byte_hmac_key);
                                 byte[] given_hmac_byte = hexStringToByteArray(given_hmac);
                                 if (hmac.SequenceEqual(given_hmac_byte))
                                 {
@@ -509,7 +510,8 @@ namespace CS408_Step1_Client_C
                         newmessage = newmessage.Substring(newmessage.IndexOf("~")+1);
                         string sign = newmessage.Substring(0, newmessage.IndexOf("~"));
                         newmessage= newmessage.Substring(newmessage.IndexOf("~") + 1);
-                        if (verifyWithRSA(Encoding.Default.GetBytes(com), 1024, serv_pub, hexStringToByteArray(sign)))
+                        file_serv_pub = System.IO.File.ReadAllText("file_server_pub.txt");
+                        if (verifyWithRSA(Encoding.Default.GetBytes(com), 1024, file_serv_pub, hexStringToByteArray(sign)))
                         {
                             if (com == "yes")
                             {
@@ -572,7 +574,7 @@ namespace CS408_Step1_Client_C
                 }
             }
         }
-        static byte[] applyHMACwithSHA256(ref byte[] input, byte[] key)
+        static byte[] applyHMACwithSHA256(byte[] input, byte[] key)
         {
             // create HMAC applier object from System.Security.Cryptography
             HMACSHA256 hmacSHA256 = new HMACSHA256(key);
@@ -724,7 +726,7 @@ namespace CS408_Step1_Client_C
 
             byte[] file= File.ReadAllBytes(filename);
             filename = filename.Substring(filename.LastIndexOf("\\") + 1);
-            byte[] hmac = applyHMACwithSHA256(ref file, byte_hmac_key);
+            byte[] hmac = applyHMACwithSHA256(file, byte_hmac_key);
             byte[] encrypted = encryptWithAES128(file, byte_session_key, byte_session_IV);
             int length = 0;
             if ((hmac.Length + encrypted.Length) % (8 * 256) == 0)

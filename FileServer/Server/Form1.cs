@@ -265,7 +265,7 @@ namespace Server
                                     byte[] session_key = u.getKey();
                                     byte[] session_IV = u.getIV();
 
-                                    byte[] hmac = applyHMACwithSHA256(ref file, hmac_key);
+                                    byte[] hmac = applyHMACwithSHA256(file, hmac_key);
                                     byte[] encrypted = encryptWithAES128(file, session_key, session_IV);
                                     int length = 0;
                                     if ((hmac.Length + encrypted.Length) % (8*256) == 0)
@@ -330,7 +330,7 @@ namespace Server
                                     string given_hmac = file_str.Substring(file_str.Length - 64, 64);
                                     file_str = file_str.Substring(0,file_str.Length - 64);
                                     byte[] decrypted = decryptWithAES128(StringToByteArray(file_str), session_key, session_IV);
-                                    byte[] hmac = applyHMACwithSHA256(ref decrypted, hmac_key);
+                                    byte[] hmac = applyHMACwithSHA256(decrypted, hmac_key);
                                     string response="";
                                     if (hmac.SequenceEqual( StringToByteArray(given_hmac)))
                                     {
@@ -573,7 +573,7 @@ namespace Server
         }
 
         // HMAC with SHA-256
-        static byte[] applyHMACwithSHA256(ref byte[] input, byte[] key)
+        static byte[] applyHMACwithSHA256(byte[] input, byte[] key)
         {
             // create HMAC applier object from System.Security.Cryptography
             HMACSHA256 hmacSHA256 = new HMACSHA256(key);

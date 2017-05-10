@@ -31,7 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmConnect));
             this.grpConnect = new System.Windows.Forms.GroupBox();
             this.numFilePort = new System.Windows.Forms.NumericUpDown();
-            this.grpFileName = new System.Windows.Forms.GroupBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.lblPassword = new System.Windows.Forms.Label();
             this.txtUsername = new System.Windows.Forms.TextBox();
@@ -40,6 +39,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.grpFileName = new System.Windows.Forms.GroupBox();
+            this.txtFileName = new System.Windows.Forms.TextBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this.grpEvent = new System.Windows.Forms.GroupBox();
             this.rtbEvent = new System.Windows.Forms.RichTextBox();
@@ -50,11 +51,10 @@
             this.btnRequest = new System.Windows.Forms.Button();
             this.btnDownload = new System.Windows.Forms.Button();
             this.btnUpload = new System.Windows.Forms.Button();
-            this.txtFileName = new System.Windows.Forms.TextBox();
             this.grpConnect.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFilePort)).BeginInit();
-            this.grpFileName.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAuthPort)).BeginInit();
+            this.grpFileName.SuspendLayout();
             this.grpEvent.SuspendLayout();
             this.grpUserList.SuspendLayout();
             this.SuspendLayout();
@@ -98,17 +98,6 @@
             0,
             0});
             // 
-            // grpFileName
-            // 
-            this.grpFileName.Controls.Add(this.txtFileName);
-            this.grpFileName.Location = new System.Drawing.Point(290, 12);
-            this.grpFileName.Name = "grpFileName";
-            this.grpFileName.Size = new System.Drawing.Size(266, 163);
-            this.grpFileName.TabIndex = 8;
-            this.grpFileName.TabStop = false;
-            this.grpFileName.Text = "File to download";
-            this.grpFileName.Visible = false;
-            // 
             // txtPassword
             // 
             this.txtPassword.Location = new System.Drawing.Point(64, 45);
@@ -147,7 +136,7 @@
             this.txtIP.Name = "txtIP";
             this.txtIP.Size = new System.Drawing.Size(150, 20);
             this.txtIP.TabIndex = 4;
-            this.txtIP.Text = "10.50.114.199";
+            this.txtIP.Text = "10.50.108.160";
             this.txtIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // numAuthPort
@@ -199,6 +188,28 @@
             this.label1.Size = new System.Drawing.Size(55, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Username";
+            // 
+            // grpFileName
+            // 
+            this.grpFileName.Controls.Add(this.txtFileName);
+            this.grpFileName.Location = new System.Drawing.Point(290, 12);
+            this.grpFileName.Name = "grpFileName";
+            this.grpFileName.Size = new System.Drawing.Size(266, 163);
+            this.grpFileName.TabIndex = 8;
+            this.grpFileName.TabStop = false;
+            this.grpFileName.Text = "File to download";
+            this.grpFileName.Visible = false;
+            // 
+            // txtFileName
+            // 
+            this.txtFileName.Location = new System.Drawing.Point(5, 18);
+            this.txtFileName.Margin = new System.Windows.Forms.Padding(2);
+            this.txtFileName.Name = "txtFileName";
+            this.txtFileName.Size = new System.Drawing.Size(235, 20);
+            this.txtFileName.TabIndex = 10;
+            this.txtFileName.Text = "die_wacht_am_rhein.ogg";
+            this.txtFileName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFileName.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // btnConnect
             // 
@@ -313,17 +324,6 @@
             this.btnUpload.Visible = false;
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
             // 
-            // txtFileName
-            // 
-            this.txtFileName.Location = new System.Drawing.Point(5, 18);
-            this.txtFileName.Margin = new System.Windows.Forms.Padding(2);
-            this.txtFileName.Name = "txtFileName";
-            this.txtFileName.Size = new System.Drawing.Size(235, 20);
-            this.txtFileName.TabIndex = 10;
-            this.txtFileName.Text = "die_wacht_am_rhein.ogg";
-            this.txtFileName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtFileName.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
             // frmConnect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -347,9 +347,9 @@
             this.grpConnect.ResumeLayout(false);
             this.grpConnect.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFilePort)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAuthPort)).EndInit();
             this.grpFileName.ResumeLayout(false);
             this.grpFileName.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numAuthPort)).EndInit();
             this.grpEvent.ResumeLayout(false);
             this.grpUserList.ResumeLayout(false);
             this.ResumeLayout(false);
