@@ -136,7 +136,7 @@
             this.txtIP.Name = "txtIP";
             this.txtIP.Size = new System.Drawing.Size(150, 20);
             this.txtIP.TabIndex = 4;
-            this.txtIP.Text = "10.50.108.160";
+            this.txtIP.Text = "10.50.114.199";
             this.txtIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // numAuthPort

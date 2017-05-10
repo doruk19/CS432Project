@@ -200,6 +200,9 @@ namespace CS408_Step1_Client_C
             grpUserList.Invoke(new MethodInvoker(delegate { grpUserList.Visible = false; }));
             btnUserList.Invoke(new MethodInvoker(delegate { btnUserList.Visible = false; }));
             btnConnect.Invoke(new MethodInvoker(delegate { btnConnect.Visible = true; }));
+            grpFileName.Invoke(new MethodInvoker(delegate { grpFileName.Visible = false; }));
+            btnDownload.Invoke(new MethodInvoker(delegate { btnDownload.Visible = false; }));
+            btnUpload.Invoke(new MethodInvoker(delegate { btnUpload.Visible = false; }));
             client.Close();
             priv_key = null;
 
@@ -460,8 +463,8 @@ namespace CS408_Step1_Client_C
                             {
                                 if (rtbEvent.InvokeRequired)
                                 {
-                                    if(packetCounter!=0)
-                                        rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText(packetCounter + "   Download in Progress: " + packetCounter * 100 / packetNum + "% Remaining packets: " + (packetNum - packetCounter).ToString() + " \n"); }));
+                                    if(packetNum!=0)
+                                    rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText(packetCounter + "   Download in Progress: " + packetCounter * 100 / packetNum + "% Remaining packets: " + (packetNum - packetCounter).ToString() + " \n"); }));
                                 }
                             }
                             sb.Append(newmessage);
@@ -482,8 +485,11 @@ namespace CS408_Step1_Client_C
                                     if (rtbEvent.InvokeRequired)
                                     {
                                         rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Successfully downloaded file " + filename + ".\n"); }));
+                                        
                                     }
+                                    sb.Clear();
                                     packetCounter = 0;
+                                    RequestServer("Disconnect");
                                 }
                                 else
                                 {
@@ -491,7 +497,9 @@ namespace CS408_Step1_Client_C
                                     {
                                         rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Failed downloading file " + filename + ".\n"); }));
                                     }
+                                    sb.Clear();
                                     packetCounter = 0;
+                                    RequestServer("Disconnect");
                                 }
 
                             }
@@ -543,6 +551,7 @@ namespace CS408_Step1_Client_C
                                 {
                                     rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Successfully uploaded the file "+filename+" \n"); }));
 
+                                    RequestServer("Disconnect");
                                 }
                             }
                             else if(com=="uf")
@@ -550,6 +559,8 @@ namespace CS408_Step1_Client_C
                                 if (rtbEvent.InvokeRequired)
                                 {
                                     rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("File Upload Failed... \n"); }));
+
+                                    RequestServer("Disconnect");
                                 }
                             }
                             else if (com.Substring(0, 2) == "ok")
@@ -557,7 +568,7 @@ namespace CS408_Step1_Client_C
                                 packetNum = Convert.ToInt32(com.Substring(2));
                                 if (rtbEvent.InvokeRequired)
                                 {
-                                    rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("File found, number of packets to send is" + packetNum + " \n"); }));
+                                    rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("File found, number of packets to send is " + packetNum + " \n"); }));
                                 }
                             }
                         }

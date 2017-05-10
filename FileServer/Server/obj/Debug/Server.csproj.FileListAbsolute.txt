@@ -22,7 +22,6 @@ D:\Users\idokurel\Source\Repos\CS432Project\AuthServer\Server\obj\Debug\Server.p
 D:\Users\idokurel\Source\Repos\CS432Project\FileServer\Server\bin\Debug\Server.exe.config
 D:\Users\idokurel\Source\Repos\CS432Project\FileServer\Server\bin\Debug\Server.exe
 D:\Users\idokurel\Source\Repos\CS432Project\FileServer\Server\bin\Debug\Server.pdb
-D:\Users\idokurel\Source\Repos\CS432Project\FileServer\Server\obj\Debug\Server.csprojResolveAssemblyReference.cache
 D:\Users\idokurel\Source\Repos\CS432Project\FileServer\Server\obj\Debug\Server.ServerForm.resources
 D:\Users\idokurel\Source\Repos\CS432Project\FileServer\Server\obj\Debug\Server.Properties.Resources.resources
 D:\Users\idokurel\Source\Repos\CS432Project\FileServer\Server\obj\Debug\Server.csproj.GenerateResource.Cache

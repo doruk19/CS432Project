@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CS408-Step1-Client-C.exe" size="247792">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CS408-Step1-Client-C.exe" size="248304">
       <assemblyIdentity name="CS408-Step1-Client-C" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>xt2ZGSTw+tSfQn9dvW5spr6GpyygSNKUAeuyPHMu/9c=</dsig:DigestValue>
+        <dsig:DigestValue>Q3lN/SlyJHEXskK5rPWnjSgz8XJpO3Rgctvq0i3/rqo=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

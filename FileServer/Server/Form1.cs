@@ -260,12 +260,14 @@ namespace Server
                                 else
                                 {
                                     byte[] file = File.ReadAllBytes(file_name);
+                                    rtbEventLog.Invoke(new MethodInvoker(delegate { rtbEventLog.AppendText("File " + generateHexStringFromByteArray(file)+"\n"); }));
                                     User u = findUser(userName);
                                     byte[] hmac_key = u.getHMAC();
                                     byte[] session_key = u.getKey();
                                     byte[] session_IV = u.getIV();
 
                                     byte[] hmac = applyHMACwithSHA256(file, hmac_key);
+                                    rtbEventLog.Invoke(new MethodInvoker(delegate { rtbEventLog.AppendText("HMAC " + generateHexStringFromByteArray(hmac) + "\n"); }));
                                     byte[] encrypted = encryptWithAES128(file, session_key, session_IV);
                                     int length = 0;
                                     if ((hmac.Length + encrypted.Length) % (8*256) == 0)
@@ -303,6 +305,7 @@ namespace Server
                             {
                                 byte[] send = Encoding.Default.GetBytes("disconnect~");
                                 n.Send(send);
+                                
                                 n.Shutdown(SocketShutdown.Both);
 
 
