@@ -246,6 +246,7 @@ namespace Server
                             //If the command is list, it sends the list of currently connected users.
                             if (command == "download")
                             {
+
                                 string file_name = receivedData.Substring(0, receivedData.IndexOf("~"));
                                 receivedData = receivedData.Substring(receivedData.IndexOf("~") + 1);
                                 if (!File.Exists(file_name))

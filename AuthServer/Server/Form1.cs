@@ -211,7 +211,7 @@ namespace Server
                                 string user_pub = System.IO.File.ReadAllText(userName + "_pub.txt");
                                 if (rtbEventLog.InvokeRequired)
                                     rtbEventLog.Invoke(new MethodInvoker(delegate { rtbEventLog.AppendText("Trying to authenticate with the pub key: " + user_pub + ".\n"); }));
-                                bool verification = verifyWithRSA(byte_random, 2048, user_pub, byte_sig);
+                                bool verification = verifyWithRSA(byte_random, 1024, user_pub, byte_sig);
                                 string verif_result;
                                 if (verification)
                                 {
@@ -235,7 +235,7 @@ namespace Server
                                 }
 
                                 string message = "fb~" + verif_result + "~";
-                                byte[] signature = signWithRSA(Encoding.Default.GetBytes(verif_result), 2048, server_pubpriv);
+                                byte[] signature = signWithRSA(Encoding.Default.GetBytes(verif_result), 1024, server_pubpriv);
                                 message += (generateHexStringFromByteArray(signature) + "~");
                                 byte[] send = Encoding.Default.GetBytes(message);
                                 n.Send(send);

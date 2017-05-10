@@ -153,6 +153,7 @@ namespace CS408_Step1_Client_C
                         thrReceive = new Thread(new ThreadStart(Receive));
                         thrReceive.Start();
                         grpConnect.Visible = false;
+                        grpFileName.Visible = false;
                         grpUserList.Visible = false;
                         btnConnect.Visible = false;
                         btnDisconnect.Visible = true;
@@ -183,6 +184,7 @@ namespace CS408_Step1_Client_C
             username = txtUsername.Text;
             pass = txtPassword.Text;
             serverIP = txtIP.Text;
+            btnRequest.Invoke(new MethodInvoker(delegate { btnRequest.Visible = true; }));
             serverPort = Convert.ToInt32(numAuthPort.Value);
             connect(serverPort,true);
 
@@ -347,7 +349,7 @@ namespace CS408_Step1_Client_C
                         {
                             rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Server generated random number is:" + Environment.NewLine + hexRandom + Environment.NewLine + Environment.NewLine); }));
                         }
-                            byte[] signatureRSA = signWithRSA(hexRandom, 2048, priv_key);
+                            byte[] signatureRSA = signWithRSA(hexRandom, 1024, priv_key);
                         signedHexRandom = generateHexStringFromByteArray(signatureRSA);
                         if (rtbEvent.InvokeRequired)
                         {
@@ -376,7 +378,7 @@ namespace CS408_Step1_Client_C
                         newmessage = newmessage.Substring(newmessage.IndexOf("~") + 1);
                         string hex = newmessage.Substring(0, newmessage.IndexOf("~"));
                         serv_pub = System.IO.File.ReadAllText("auth_server_pub.txt");
-                        bool verificationResult = verifyWithRSA(byte_fbAns, 2048, serv_pub, hexStringToByteArray(hex));
+                        bool verificationResult = verifyWithRSA(byte_fbAns, 1024, serv_pub, hexStringToByteArray(hex));
                         if (verificationResult == true)
                         {
                             if (rtbEvent.InvokeRequired)
@@ -387,6 +389,7 @@ namespace CS408_Step1_Client_C
                                 if (rtbEvent.InvokeRequired)
                                 {
                                     rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Successfully authenticated \n"); }));
+                                    btnRequest.Invoke(new MethodInvoker(delegate { btnRequest.Visible = true; }));
                                 }
                                 else if (fbAns == "no")
                                     if (rtbEvent.InvokeRequired)
@@ -428,6 +431,12 @@ namespace CS408_Step1_Client_C
                                 rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Session Key: \n" + generateHexStringFromByteArray(byte_session_key) + "\n Session IV: \n" + generateHexStringFromByteArray(byte_session_IV) + "\n HMAC Key: \n" + generateHexStringFromByteArray(byte_hmac_key) + "\n"); }));
                             }
                             RequestServer("Disconnect");
+                            btnUpload.Invoke(new MethodInvoker(delegate { btnUpload.Visible = true; }));
+                            btnDownload.Invoke(new MethodInvoker(delegate { btnDownload.Visible = true; }));
+                            grpFileName.Invoke(new MethodInvoker(delegate { grpFileName.Visible = true; }));
+                            btnRequest.Invoke(new MethodInvoker(delegate { btnRequest.Visible = false; }));
+
+                            
                             connect(Convert.ToInt32(numFilePort.Value), false);
                         }
                         else
@@ -504,6 +513,8 @@ namespace CS408_Step1_Client_C
                                 if (rtbEvent.InvokeRequired)
                                 {
                                     rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Ticket is valid\n"); }));
+                                    grpFileName.Invoke(new MethodInvoker(delegate { grpFileName.Visible = true;}));
+                                    btnRequest.Invoke(new MethodInvoker(delegate { btnRequest.Visible = false; }));
                                 }
                             }
                             else if (com == "no")
@@ -573,6 +584,10 @@ namespace CS408_Step1_Client_C
             {
                 rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Disconnect requested. " + Environment.NewLine + Environment.NewLine + Environment.NewLine); }));
             }
+            btnUpload.Invoke(new MethodInvoker(delegate { btnUpload.Visible = false; }));
+            btnRequest.Invoke(new MethodInvoker(delegate { btnRequest.Visible = false; }));
+            btnDownload.Invoke(new MethodInvoker(delegate { btnDownload.Visible = false; }));
+            grpFileName.Invoke(new MethodInvoker(delegate { grpFileName.Visible = false; }));
             RequestServer("Disconnect");
             disconnect(client);
             rtbEvent.AppendText( "Disconnect granted." + Environment.NewLine);
@@ -663,6 +678,8 @@ namespace CS408_Step1_Client_C
 
         private void btnRequest_Click(object sender, EventArgs e)
         {
+            grpFileName.Invoke(new MethodInvoker(delegate { grpFileName.Visible = true; }));
+            grpFileName.Location = grpConnect.Location;
             RequestServer("Ticket Request");
         }
 
@@ -685,15 +702,23 @@ namespace CS408_Step1_Client_C
 
         private void btnDownload_Click(object sender, EventArgs e)
         {
-            filename = "gg.mp3";
+            filename = txtFileName.Text.Trim();
             RequestServer("Download");
         }
 
         private void btnUpload_Click(object sender, EventArgs e)
         {
-            filename = "die_wacht_am_rhein.ogg";
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                filename=openFileDialog1.FileName;
+                
+            }
+            rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Uploading "+filename+" \n"); }));
+
 
             byte[] file= File.ReadAllBytes(filename);
+            filename = filename.Substring(filename.LastIndexOf("\\") + 1);
             byte[] hmac = applyHMACwithSHA256(ref file, byte_hmac_key);
             byte[] encrypted = encryptWithAES128(file, byte_session_key, byte_session_IV);
             int length = 0;
@@ -712,10 +737,10 @@ namespace CS408_Step1_Client_C
             string file_str = sb.ToString();
             for (int i = 0; i < length; i++)
             {
-                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText((i+1).ToString() + "   Download in Progress: " + (i+1) * 100 / length + "% Remaining packets: " + (length - i-1).ToString() + " \n"); }));
+                if((i+1)%100==0)
+                    rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText((i+1).ToString() + "   Upload in Progress: " + (i+1) * 100 / length + "% Remaining packets: " + (length - i-1).ToString() + " \n"); }));
                 string packet = file_str.Substring(8 * 512 * i, Math.Min(8 * 512, file_str.Length - 8 * 512 * i));
                 string message = response + packet + "~";
-                rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Packet " + length + " packages \n"); }));
 
                 client.Send(Encoding.Default.GetBytes(message));
 
@@ -754,6 +779,11 @@ namespace CS408_Step1_Client_C
             }
 
             return result;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

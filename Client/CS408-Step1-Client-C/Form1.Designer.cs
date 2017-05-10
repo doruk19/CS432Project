@@ -31,9 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmConnect));
             this.grpConnect = new System.Windows.Forms.GroupBox();
             this.numFilePort = new System.Windows.Forms.NumericUpDown();
-            this.grpServSelect = new System.Windows.Forms.GroupBox();
-            this.rdFile = new System.Windows.Forms.RadioButton();
-            this.rdAuth = new System.Windows.Forms.RadioButton();
+            this.grpFileName = new System.Windows.Forms.GroupBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.lblPassword = new System.Windows.Forms.Label();
             this.txtUsername = new System.Windows.Forms.TextBox();
@@ -52,9 +50,10 @@
             this.btnRequest = new System.Windows.Forms.Button();
             this.btnDownload = new System.Windows.Forms.Button();
             this.btnUpload = new System.Windows.Forms.Button();
+            this.txtFileName = new System.Windows.Forms.TextBox();
             this.grpConnect.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFilePort)).BeginInit();
-            this.grpServSelect.SuspendLayout();
+            this.grpFileName.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAuthPort)).BeginInit();
             this.grpEvent.SuspendLayout();
             this.grpUserList.SuspendLayout();
@@ -63,7 +62,6 @@
             // grpConnect
             // 
             this.grpConnect.Controls.Add(this.numFilePort);
-            this.grpConnect.Controls.Add(this.grpServSelect);
             this.grpConnect.Controls.Add(this.txtPassword);
             this.grpConnect.Controls.Add(this.lblPassword);
             this.grpConnect.Controls.Add(this.txtUsername);
@@ -76,7 +74,7 @@
             this.grpConnect.Margin = new System.Windows.Forms.Padding(2);
             this.grpConnect.Name = "grpConnect";
             this.grpConnect.Padding = new System.Windows.Forms.Padding(2);
-            this.grpConnect.Size = new System.Drawing.Size(266, 147);
+            this.grpConnect.Size = new System.Drawing.Size(266, 163);
             this.grpConnect.TabIndex = 0;
             this.grpConnect.TabStop = false;
             this.grpConnect.Text = "Connection";
@@ -100,39 +98,16 @@
             0,
             0});
             // 
-            // grpServSelect
+            // grpFileName
             // 
-            this.grpServSelect.Controls.Add(this.rdFile);
-            this.grpServSelect.Controls.Add(this.rdAuth);
-            this.grpServSelect.Location = new System.Drawing.Point(4, 111);
-            this.grpServSelect.Name = "grpServSelect";
-            this.grpServSelect.Size = new System.Drawing.Size(257, 31);
-            this.grpServSelect.TabIndex = 8;
-            this.grpServSelect.TabStop = false;
-            this.grpServSelect.Text = "Server Type";
-            // 
-            // rdFile
-            // 
-            this.rdFile.AutoSize = true;
-            this.rdFile.Location = new System.Drawing.Point(139, 14);
-            this.rdFile.Name = "rdFile";
-            this.rdFile.Size = new System.Drawing.Size(75, 17);
-            this.rdFile.TabIndex = 1;
-            this.rdFile.Text = "File Server";
-            this.rdFile.UseVisualStyleBackColor = true;
-            this.rdFile.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
-            // 
-            // rdAuth
-            // 
-            this.rdAuth.AutoSize = true;
-            this.rdAuth.Checked = true;
-            this.rdAuth.Location = new System.Drawing.Point(6, 14);
-            this.rdAuth.Name = "rdAuth";
-            this.rdAuth.Size = new System.Drawing.Size(127, 17);
-            this.rdAuth.TabIndex = 0;
-            this.rdAuth.TabStop = true;
-            this.rdAuth.Text = "Authentication Server";
-            this.rdAuth.UseVisualStyleBackColor = true;
+            this.grpFileName.Controls.Add(this.txtFileName);
+            this.grpFileName.Location = new System.Drawing.Point(290, 12);
+            this.grpFileName.Name = "grpFileName";
+            this.grpFileName.Size = new System.Drawing.Size(266, 163);
+            this.grpFileName.TabIndex = 8;
+            this.grpFileName.TabStop = false;
+            this.grpFileName.Text = "File to download";
+            this.grpFileName.Visible = false;
             // 
             // txtPassword
             // 
@@ -172,7 +147,7 @@
             this.txtIP.Name = "txtIP";
             this.txtIP.Size = new System.Drawing.Size(150, 20);
             this.txtIP.TabIndex = 4;
-            this.txtIP.Text = "159.20.87.167";
+            this.txtIP.Text = "10.50.114.199";
             this.txtIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // numAuthPort
@@ -227,10 +202,10 @@
             // 
             // btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(9, 161);
+            this.btnConnect.Location = new System.Drawing.Point(9, 177);
             this.btnConnect.Margin = new System.Windows.Forms.Padding(2);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(266, 43);
+            this.btnConnect.Size = new System.Drawing.Size(266, 27);
             this.btnConnect.TabIndex = 1;
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = true;
@@ -283,10 +258,10 @@
             // 
             // btnDisconnect
             // 
-            this.btnDisconnect.Location = new System.Drawing.Point(9, 162);
+            this.btnDisconnect.Location = new System.Drawing.Point(9, 177);
             this.btnDisconnect.Margin = new System.Windows.Forms.Padding(2);
             this.btnDisconnect.Name = "btnDisconnect";
-            this.btnDisconnect.Size = new System.Drawing.Size(266, 42);
+            this.btnDisconnect.Size = new System.Drawing.Size(266, 27);
             this.btnDisconnect.TabIndex = 3;
             this.btnDisconnect.Text = "Disconnect";
             this.btnDisconnect.UseVisualStyleBackColor = true;
@@ -313,6 +288,7 @@
             this.btnRequest.TabIndex = 5;
             this.btnRequest.Text = "Request";
             this.btnRequest.UseVisualStyleBackColor = true;
+            this.btnRequest.Visible = false;
             this.btnRequest.Click += new System.EventHandler(this.btnRequest_Click);
             // 
             // btnDownload
@@ -323,6 +299,7 @@
             this.btnDownload.TabIndex = 6;
             this.btnDownload.Text = "Download";
             this.btnDownload.UseVisualStyleBackColor = true;
+            this.btnDownload.Visible = false;
             this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
             // 
             // btnUpload
@@ -333,7 +310,19 @@
             this.btnUpload.TabIndex = 7;
             this.btnUpload.Text = "Upload";
             this.btnUpload.UseVisualStyleBackColor = true;
+            this.btnUpload.Visible = false;
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
+            // 
+            // txtFileName
+            // 
+            this.txtFileName.Location = new System.Drawing.Point(5, 18);
+            this.txtFileName.Margin = new System.Windows.Forms.Padding(2);
+            this.txtFileName.Name = "txtFileName";
+            this.txtFileName.Size = new System.Drawing.Size(235, 20);
+            this.txtFileName.TabIndex = 10;
+            this.txtFileName.Text = "die_wacht_am_rhein.ogg";
+            this.txtFileName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFileName.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // frmConnect
             // 
@@ -341,6 +330,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(357, 607);
             this.Controls.Add(this.btnUpload);
+            this.Controls.Add(this.grpFileName);
             this.Controls.Add(this.btnDownload);
             this.Controls.Add(this.btnRequest);
             this.Controls.Add(this.grpUserList);
@@ -357,8 +347,8 @@
             this.grpConnect.ResumeLayout(false);
             this.grpConnect.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFilePort)).EndInit();
-            this.grpServSelect.ResumeLayout(false);
-            this.grpServSelect.PerformLayout();
+            this.grpFileName.ResumeLayout(false);
+            this.grpFileName.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAuthPort)).EndInit();
             this.grpEvent.ResumeLayout(false);
             this.grpUserList.ResumeLayout(false);
@@ -385,12 +375,11 @@
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Button btnRequest;
-        private System.Windows.Forms.GroupBox grpServSelect;
-        private System.Windows.Forms.RadioButton rdFile;
-        private System.Windows.Forms.RadioButton rdAuth;
+        private System.Windows.Forms.GroupBox grpFileName;
         private System.Windows.Forms.NumericUpDown numFilePort;
         private System.Windows.Forms.Button btnDownload;
         private System.Windows.Forms.Button btnUpload;
+        private System.Windows.Forms.TextBox txtFileName;
     }
 }
 
