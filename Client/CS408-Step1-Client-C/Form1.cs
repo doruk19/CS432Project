@@ -199,6 +199,7 @@ namespace CS408_Step1_Client_C
             grpUserList.Invoke(new MethodInvoker(delegate { grpUserList.Visible = false; }));
             btnUserList.Invoke(new MethodInvoker(delegate { btnUserList.Visible = false; }));
             btnConnect.Invoke(new MethodInvoker(delegate { btnConnect.Visible = true; }));
+            packetCounter = 0;
             client.Close();
             priv_key = null;
 
@@ -481,6 +482,7 @@ namespace CS408_Step1_Client_C
                                     {
                                         rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Successfully downloaded file " + filename + ".\n"); }));
                                     }
+                                    packetCounter = 0;
                                 }
                                 else
                                 {
@@ -488,6 +490,7 @@ namespace CS408_Step1_Client_C
                                     {
                                         rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Failed downloading file " + filename + ".\n"); }));
                                     }
+                                    packetCounter = 0;
                                 }
 
                             }
@@ -537,6 +540,7 @@ namespace CS408_Step1_Client_C
                                 if (rtbEvent.InvokeRequired)
                                 {
                                     rtbEvent.Invoke(new MethodInvoker(delegate { rtbEvent.AppendText("Successfully uploaded the file "+filename+" \n"); }));
+
                                 }
                             }
                             else if(com=="uf")
@@ -591,6 +595,7 @@ namespace CS408_Step1_Client_C
             RequestServer("Disconnect");
             disconnect(client);
             rtbEvent.AppendText( "Disconnect granted." + Environment.NewLine);
+            packetCounter = 0;
         }
 
         private void btnUserList_Click(object sender, EventArgs e)  //requests the user list from the server
